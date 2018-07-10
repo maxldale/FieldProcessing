@@ -4,17 +4,19 @@ import extraction.{RawDataFormatter, SalesContactInfo}
 import ingest.CSVReader
 
 object SalesContactInfoCleanUp extends App {
+
+  // Get, read, and parse file into rows/columns
   val fileName = "/SalesContactInfo.csv"
-  val pathUrl = getClass.getResource(fileName)
-  println(pathUrl)
-  val path = pathUrl.getPath
-  println(path)
-  val fileLines = CSVReader.readData(path)
-  val parsedLines = CSVReader.parseData(fileLines)
-  val rawData = RawDataFormatter.applySchema(parsedLines, SalesContactInfo.attemptConversion)
-  val firstTen = rawData.take(10)
+  val path = getClass.getResource(fileName).getPath
+  val parsedLines = CSVReader.parseFile(path)
+
+  // Try to extract info from the raw data
+  val salesContactData = RawDataFormatter.applySchema(parsedLines, SalesContactInfo.attemptConversion)
+
+  // Lets look at the first 10 rows to see how we did
+  val firstTen = salesContactData.take(10)
   firstTen.foreach {
-    case Left(value) => println(value)
-    case Right(value) => println(value)
+    case Left(value) => println(s"Failed:\t[$value]\n")
+    case Right(value) => println(s"Success:\t[$value]\n")
   }
 }
