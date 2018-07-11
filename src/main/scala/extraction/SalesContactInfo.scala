@@ -33,11 +33,11 @@ object SalesContactInfo {
   }
 }
 
-class SalesContactInfo(raw: String,
-                       name: Option[String] = None,
-                       email: Option[String] = None,
-                       phoneNumber: Option[String] = None,
-                       address: Option[String] = None) {
+class SalesContactInfo(val raw: String,
+                       val name: Option[String] = None,
+                       val email: Option[String] = None,
+                       val phoneNumber: Option[String] = None,
+                       val address: Option[String] = None) {
 
   override def toString: String = s"$raw\n{$name, $email, $phoneNumber, $address}"
 }

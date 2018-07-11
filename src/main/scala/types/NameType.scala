@@ -15,8 +15,9 @@ object NameType extends FieldType {
   private val prefixOpt: String = raw"(?:$prefixOrSuffix$space)?"
   private val suffixOpt: String = raw"(?:$prefixOrSuffix)?"
   private val nameOpt: String = raw"(?:$name$space)?"
-  private val nameOrInitialOpt: String = raw"(?:(?:$initial|$name)$space)?"
-  private val fullName: String = raw"($prefixOpt$nameOrInitialOpt$nameOrInitialOpt$nameOrInitialOpt$suffixOpt)"
+  private val nameOrInitial: String = raw"(?:$initial|$name)$space"
+  private val nameOrInitialOpt: String = raw"(?:$nameOrInitial)?"
+  private val fullName: String = raw"($prefixOpt$nameOrInitial$nameOrInitialOpt$nameOrInitialOpt$suffixOpt)"
   private val compiledPattern: Regex = fullName.r.unanchored
 
   override def regex: Regex = compiledPattern
