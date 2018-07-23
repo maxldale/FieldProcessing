@@ -1,6 +1,6 @@
 package runner
 
-import extraction.{RawDataFormatter, SalesContactInfo}
+import extraction.{RawDataFormatter, ARSalesContactInfo}
 import ingest.CSVReader
 
 import scala.util.Random
@@ -8,7 +8,7 @@ import scala.util.Random
 object SalesContactInfoCleanUp extends App {
 
   // Testing
-  implicit val testing: Boolean = false
+  implicit val testing: Boolean = true
   var successes = 0
   var fails = 0
 
@@ -18,7 +18,7 @@ object SalesContactInfoCleanUp extends App {
   val parsedLines = CSVReader.parseFile(path)
 
   // Try to extract info from the raw data
-  val salesContactData = RawDataFormatter.applySchema(parsedLines, SalesContactInfo.attemptConversion)
+  val salesContactData = RawDataFormatter.applySchema(parsedLines, ARSalesContactInfo.attemptConversion)
 
   // Lets look at the first 10 rows to see how we did
   if(testing) {
@@ -36,31 +36,31 @@ object SalesContactInfoCleanUp extends App {
   printRes("")(true)
 
   def failed(strings: List[String]): Unit ={
-    incFails
-    printRes(s"Failed: [$strings]")(true)
+    incFails()
+    printRes(s"Failed: [$strings]")
   }
 
-  def succeeded(info: SalesContactInfo): Unit = {
+  def succeeded(info: ARSalesContactInfo): Unit = {
     info.name match {
-      case Some(name) =>
-        succeededWithName(info)
       case None =>
-        incFails
-        printRes(s"No Name: [$info]")(true)
+        incFails()
+        printRes(s"No Name: [$info]")
+      case _ =>
+        succeededWithName(info)
     }
   }
 
-  def succeededWithName(info: SalesContactInfo): Unit = {
+  def succeededWithName(info: ARSalesContactInfo): Unit = {
     info.name match {
-      case Some(name) if name.isEmpty =>
-        incFails
-        printRes(s"Empty Name: [${info.raw}]")(true)
+      case Some(name) if name.length == 0 =>
+        incFails()
+        printRes(s"Empty Name: [${info.raw}]")
       case Some(_) =>
-        incSuccesses
+        incSuccesses()
         printRes(s"NonEmpty Name: [$info]")
       case _ =>
-        incFails
-        printRes(s"Some Error: [$info]")(true)
+        incFails()
+        printRes(s"Some Error: [$info]")
     }
   }
 
@@ -68,11 +68,11 @@ object SalesContactInfoCleanUp extends App {
     if(testing) println(f"[$successes%4d][$fails%4d] $string")
   }
 
-  def incFails: Unit = {
+  def incFails(): Unit = {
     fails = fails + 1
   }
 
-  def incSuccesses: Unit = {
+  def incSuccesses(): Unit = {
     successes = successes + 1
   }
 }

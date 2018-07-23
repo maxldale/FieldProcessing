@@ -16,7 +16,7 @@ class NameTypeTest extends FunSuite {
   }
 
   test("testRegex") {
-    val expected = """((?:\b[a-zA-Z]{2,6}\b\.?[ ]*)?(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b)[ ]*(?:(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b)[ ]*)?(?:(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b)[ ]*)?(?:\b[a-zA-Z]{2,6}\b\.?)?)"""
+    val expected = """((?:(?=\s*\S*\b@)|\b[a-zA-Z]{2,6}\b\.?)?[ ]*(?:(?=\s*\S*\b@)|(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b))(?:[ ]*(?:(?=\s*\S*\b@)|(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b)))?(?:[ ]*(?:(?=\s*\S*\b@)|(?:\b[a-zA-Z]\b\.?|\b[a-zA-Z]+\b)))?(?:(?=\s*\S*\b@)|[ ]*\b[a-zA-Z]{2,6}\b\.?)?)"""
     val actual = NameType.regex.pattern.toString
     assert(actual == expected)
   }

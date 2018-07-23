@@ -39,4 +39,8 @@ trait FieldType {
       case _ => None
     }
   }
+
+  def extractAllFrom(input: String): List[T] = {
+    regex.findAllIn(input).toList.map(clean)
+  }
 }

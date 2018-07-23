@@ -19,7 +19,7 @@ object PhoneType extends FieldType {
   private def extension(rawStr: String): String = raw"(?:(?:x|ext)[:]?[ ]*$rawStr)?"
 
   private def wCon(input: String, last: Boolean = false): String = {
-    if(last == true) raw"$input"
+    if(last) raw"$input"
     else raw"$input$connector"
   }
 
