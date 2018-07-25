@@ -62,5 +62,67 @@ class ARRow (val rawList: List[String],
     accStr + s"$indent|- $fieldName -> " + strVer + "\n"
   }
 
+  private def quoteIfNotEmpty(string: String): String = {
+    if (string.length == 0){
+      string
+    }else {
+      "\"" + string + "\""
+    }
+  }
+
+  def emailAsCell: String = {
+    email match {
+      case Some(arEmail) => quoteIfNotEmpty(arEmail.email.getOrElse(""))
+      case None => ""
+    }
+  }
+
+  def faxAsCell: String = {
+    fax match {
+      case Some(arFax) => quoteIfNotEmpty(arFax.fax.getOrElse(""))
+      case None => ""
+    }
+  }
+
+  def nameAsCell: String = {
+    name match {
+      case Some(arName) => quoteIfNotEmpty(arName.name.getOrElse(""))
+      case None => ""
+    }
+  }
+
+  def phoneAsCell: String = {
+    phone match {
+      case Some(arPhone) => quoteIfNotEmpty(arPhone.phone.getOrElse(""))
+      case None => ""
+    }
+  }
+
+  def titleAsCell: String = {
+    title match {
+      case Some(arTitle) => quoteIfNotEmpty(arTitle.title.getOrElse(""))
+      case None => ""
+    }
+  }
+
+  def salesContactAsCell: List[String] = {
+    salesContact match {
+      case Some(arSalesContact) => {
+        List(quoteIfNotEmpty(arSalesContact.email.getOrElse("")),
+          quoteIfNotEmpty(arSalesContact.name.getOrElse("")),
+            quoteIfNotEmpty(arSalesContact.phoneNumber.getOrElse("")))
+      }
+      case None => {
+        List("", "", "")
+      }
+    }
+  }
+
+  def asCSVRow: String = {
+    val cells = emailAsCell :: faxAsCell :: nameAsCell :: phoneAsCell :: titleAsCell :: salesContactAsCell
+    //println(cells.mkString(","))
+    cells.mkString(",")
+  }
+
   override def toString: String = fields.foldLeft("")(mapToStringOp)
 }

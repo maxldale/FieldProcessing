@@ -2,6 +2,7 @@ package runner
 
 import extraction.RawDataFormatter
 import ingest.{ARRow, CSVReader}
+import output.CSVWriter
 
 import scala.util.Random
 
@@ -18,11 +19,11 @@ object RowCleanUp extends App {
   val parsedLines = CSVReader.parseFile(path)
 
   // Try to extract info from the raw data
-  val rowData = RawDataFormatter.applySchema(parsedLines, ARRow.attemptConversion)
+  val rowData: List[Either[List[String], ARRow]] = RawDataFormatter.applySchema(parsedLines, ARRow.attemptConversion)
 
   //Lets look at the first 10 rows to see how we did
   if(testing) {
-    Random.shuffle(rowData).take(10).foreach {
+    rowData.slice(20, 30).foreach {
       case Left(value) => failed(value)
       case Right(value) => succeeded(value)
     }
@@ -32,6 +33,12 @@ object RowCleanUp extends App {
 //    case Left(value) => failed(value)
 //    case Right(value) => succeeded(value)
 //  }
+
+
+  rowData.foreach {
+    case Left(value) => failed(value)
+    case Right(value) => CSVWriter.writeARRow(value)
+  }
 
   printRes("")(true)
 
